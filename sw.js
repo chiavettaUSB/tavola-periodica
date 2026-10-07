@@ -1,0 +1,22 @@
+// generato da build/build.py
+const CACHE = 'tavola-118ff87de1';
+const ASSETS = ["./", "index.html", "manifest.webmanifest", "icons/apple-touch-icon.png", "icons/favicon.png", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png", "img/001.jpg", "img/002.jpg", "img/003.jpg", "img/004.jpg", "img/005.jpg", "img/006.jpg", "img/007.jpg", "img/008.jpg", "img/009.jpg", "img/010.jpg", "img/011.jpg", "img/012.jpg", "img/013.jpg", "img/014.jpg", "img/015.jpg", "img/016.jpg", "img/017.jpg", "img/018.jpg", "img/019.jpg", "img/020.jpg", "img/021.jpg", "img/022.jpg", "img/023.jpg", "img/024.jpg", "img/025.jpg", "img/026.jpg", "img/027.jpg", "img/028.jpg", "img/029.jpg", "img/030.jpg", "img/031.jpg", "img/032.jpg", "img/033.jpg", "img/034.jpg", "img/035.jpg", "img/036.jpg", "img/037.jpg", "img/038.jpg", "img/039.jpg", "img/040.jpg", "img/041.jpg", "img/042.jpg", "img/043.jpg", "img/044.jpg", "img/045.jpg", "img/046.jpg", "img/047.jpg", "img/048.jpg", "img/049.jpg", "img/050.jpg", "img/051.jpg", "img/052.jpg", "img/053.jpg", "img/054.jpg", "img/055.jpg", "img/056.jpg", "img/057.jpg", "img/058.jpg", "img/059.jpg", "img/060.jpg", "img/061.jpg", "img/062.jpg", "img/063.jpg", "img/064.jpg", "img/065.jpg", "img/066.jpg", "img/067.jpg", "img/068.jpg", "img/069.jpg", "img/070.jpg", "img/071.jpg", "img/072.jpg", "img/073.jpg", "img/074.jpg", "img/075.jpg", "img/076.jpg", "img/077.jpg", "img/078.jpg", "img/079.jpg", "img/080.jpg", "img/081.jpg", "img/082.jpg", "img/083.jpg", "img/084.jpg", "img/085.jpg", "img/086.jpg", "img/087.jpg", "img/088.jpg", "img/089.jpg", "img/090.jpg", "img/091.jpg", "img/092.jpg", "img/093.jpg", "img/094.jpg", "img/095.jpg", "img/096.jpg", "img/097.jpg", "img/098.jpg", "img/099.jpg", "img/100.jpg", "img/101.jpg", "img/102.jpg", "img/103.jpg"];
+self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
+self.addEventListener('fetch', e => {
+  const u = new URL(e.request.url);
+  if (e.request.method !== 'GET') return;
+  // font di Google: dalla cache se ci sono, altrimenti dalla rete e poi in cache
+  if (u.hostname.endsWith('googleapis.com') || u.hostname.endsWith('gstatic.com')) {
+    e.respondWith(caches.open(CACHE).then(c => c.match(e.request).then(r => r || fetch(e.request).then(n => { c.put(e.request, n.clone()); return n; }))));
+    return;
+  }
+  if (u.origin !== location.origin) return;
+  // la pagina: prima la rete (così gli aggiornamenti arrivano subito), senza rete la copia salvata
+  if (e.request.mode === 'navigate' || u.pathname.endsWith('/') || u.pathname.endsWith('index.html')) {
+    e.respondWith(fetch(e.request, { cache: 'no-cache' }).then(n => { const c = n.clone(); caches.open(CACHE).then(k => k.put('index.html', c)); return n; })
+      .catch(() => caches.match('index.html')));
+    return;
+  }
+  e.respondWith(caches.match(e.request, { ignoreSearch: true }).then(r => r || fetch(e.request)));
+});
